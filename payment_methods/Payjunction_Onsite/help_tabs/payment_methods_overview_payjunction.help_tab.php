@@ -6,7 +6,7 @@
         <p><?php _e('For instructions on retrieving your API login and resetting your API password, please see <a href="https://company.payjunction.com/pages/viewpage.action?pageId=328435">this guide</a>', 'event_espresso'); ?></p>
     </li>
     <li>
-        <strong><?php _e('Test Mode', 'event_espresso'); ?></strong>
+        <strong><?php _e('Debug Mode', 'event_espresso'); ?></strong>
         <p><?php _e('When enabled, sends all transactions to the <a href="https://www.payjunctionlabs.com">PayJunction Labs</a> testing site. Please see <a href="https://company.payjunction.com/support/PayJunction+Demo+Account">this guide</a> for login information.'); ?></p>
     </li>
     <li>
