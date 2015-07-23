@@ -46,7 +46,7 @@ class EE_PMT_Payjunction_Onsite extends EE_PMT_Base{
                     'html_label_text' => sprintf(__('QuickLink API Login %s', 'event_espresso'), $this->get_help_tab_link()),
                     'required' => true)
                 ),
-                'api_pass' => new EE_Text_Input(array(
+                'api_pass' => new EE_Password_Input(array(
                     'html_label_text' => sprintf(__('QuickLink API Password %s', 'event_espresso'), $this->get_help_tab_link()),
                     'required' => true)
                 ),
