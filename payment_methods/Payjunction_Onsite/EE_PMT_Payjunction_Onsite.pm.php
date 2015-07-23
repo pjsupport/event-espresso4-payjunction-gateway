@@ -71,7 +71,12 @@ class EE_PMT_Payjunction_Onsite extends EE_PMT_Base{
                 ),
                 'auth_only' => new EE_Yes_No_Input(array(
                     'html_label_text' => sprintf(__('Authorize Only %s', 'event_espresso'), $this->get_help_tab_link()),
-                    'html_help_test' => __('Transactions ran in this mode must be manually captured in your PayJunction account in order to be funded.', 'event_espresso'),
+                    'html_help_text' => __('Transactions ran in this mode must be manually captured in your PayJunction account in order to be funded.', 'event_espresso'),
+                    'default' => false)
+                ),
+                'request_signature' => new EE_Yes_No_Input(array(
+                    'html_label_text' => sprintf(__('Send Signature Request %s', 'event_espresso'), $this->get_help_tab_link()),
+                    'html_help_text' => __('Sends a copy of the receipt from PayJunction requesting the customer digitally sign for the transaction.', 'event_espresso'),
                     'default' => false)
                 )
             )

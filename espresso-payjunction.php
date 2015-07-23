@@ -1,13 +1,12 @@
 <?php
 /*
-  Plugin Name: Event Espresso - Payjunction
-  Plugin URI: http://www.eventespresso.com
-  Description: The Event Espresso Payjunction adds 2 new payment methods: new onsite and new offsite
+  Plugin Name: Event Espresso - PayJunction
+  Plugin URI: http://www.payjunction.com
+  Description: PayJunction Trinity payment gateway for Event Espresso 4
   Version: 0.0.1.dev.002
-  Author: Event Espresso
-  Author URI: http://www.eventespresso.com
-  Copyright 2014 Event Espresso (email : support@eventespresso.com)
-
+  Author: PayJunction
+  Author URI: http://www.payjunction.com
+  
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.

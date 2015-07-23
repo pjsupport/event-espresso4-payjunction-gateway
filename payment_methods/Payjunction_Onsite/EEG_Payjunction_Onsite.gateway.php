@@ -18,6 +18,7 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
     protected $_avs_mode;
     protected $_cvv_mode;
     protected $_auth_only;
+    protected $_request_signature;
     
     private $_post_fields = array();
     private $_fraud_alert = false;
@@ -202,8 +203,8 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
 	        	$payment->set_gateway_response(__("Reply from the Trinity gateway servers not received.", "event_espresso"));
 	        	$payment->set_details(print_r($response));
 	        }
-        return $payment;
     	}
+        return $payment;
     }
 }
 
