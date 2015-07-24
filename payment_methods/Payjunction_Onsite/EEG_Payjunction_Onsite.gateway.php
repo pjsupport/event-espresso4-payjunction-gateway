@@ -129,14 +129,16 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
 	        	$payment->set_details(print_r($response, true));
         	} else { // If we don't have a transaction id, we must have hit at least one error
         		$payment->set_status($this->_pay_model->declined_status());
-        		$messages = 'There has been an error: ';
-        		foreach ($response['errors'] as $err) {
-        			if (isset($err['parameter'])) {
-        				$messages .= sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);
-        			} else {
-        				$messages .= sprintf('%s: %s; ', $err['type'], $err['message']);
-        			}
-    			}
+        		$errors = array();
+                $messages = 'There has been an error: ';
+                foreach ($response['errors'] as $err) {
+                    if (isset($err['parameter'])) {
+                        $errors[] = sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);
+                    } else {
+                        $errors[] = sprintf('%s: %s; ', $err['type'], $err['message']);
+                    }
+                }
+                $messages = sprintf(_n( 'There has been %s error: %s', 'There have been %s errors: %s', count($errors), 'event_espresso'), count($errors), implode('<br>', $errors));
     			$payment->set_gateway_response($messages);
     			$payment->set_details(print_r($response, true));
         	}
@@ -153,7 +155,7 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
     	$transactionId = $payment->get_txn_id_chq_nmbr();
     	if (empty($transactionId)) {
     		$payment->set_status($this->_pay_model->declined_status());
-    		$payment->set_details('Refund cannot be processed because there was no transactionId found');
+    		$payment->set_details(__('Refund cannot be processed because there was no transactionId found', 'event_espresso'));
     		$payment->set_gateway_response('Request not sent');
     	} else {
     		// We seem to have a transactionId, let's try and run the refund
@@ -187,14 +189,16 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
 					}
 				} else { // If we don't have a transaction id, we must have hit at least one error
 	        		$payment->set_status($this->_pay_model->declined_status());
-	        		$messages = 'There has been an error: ';
-	        		foreach ($response['errors'] as $err) {
-	        			if (isset($err['parameter'])) {
-	        				$messages .= sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);
-	        			} else {
-	        				$messages .= sprintf('%s: %s; ', $err['type'], $err['message']);
-	        			}
-	    			}
+	        		$errors = array();
+                    $messages = 'There has been an error: ';
+                    foreach ($response['errors'] as $err) {
+                        if (isset($err['parameter'])) {
+                            $errors[] = sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);
+                        } else {
+                            $errors[] = sprintf('%s: %s; ', $err['type'], $err['message']);
+                        }
+                    }
+                    $messages = sprintf(_n( 'There has been %s error: %s', 'There have been %s errors: %s', count($errors), 'event_espresso'), count($errors), implode('<br>', $errors));
 	    			$payment->set_gateway_response($messages);
 	    			$payment->set_details(print_r($response, true));
 	        	}
