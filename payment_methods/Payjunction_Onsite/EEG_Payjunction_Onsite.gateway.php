@@ -40,7 +40,6 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
             $login = $this->_api_login;
             $pass = $this->_api_pass;
         }
-        $credentials = base64_encode($login . ':' . $pass);
 		$url = !is_null($txnid) ? $gateway."/".$txnid : $gateway;
 		$options = array(
 		    'httpversion' => '1.1',
