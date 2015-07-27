@@ -28,54 +28,34 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
     
     public function process_rest_request($type, $post=null, $txnid=null) {
         // Make sure cURL is installed before proceeding
-        if (function_exists('curl_version')) {
-            if ($this->_debug_mode) {
-                $gateway = self::LABS_URL;
-                $appkey = $this->_api_key_labs;
-                $login = 'pj-ql-01';
-                $pass = 'pj-ql-01p';
-            } else {
-                $gateway =  self::PRODUCTION_URL;
-                $appkey = $this->_api_key_live;
-                $login = $this->_api_login;
-                $pass = $this->_api_pass;
-            }
-    		$url = !is_null($txnid) ? $gateway."/".$txnid : $gateway;
-    		$ch = curl_init();
-    		curl_setopt($ch, CURLOPT_URL, $url);
-    		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-    		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json', 'X-PJ-Application-Key: ' . $appkey));
-    		curl_setopt($ch, CURLOPT_USERPWD, $login . ':' . $pass);
-    		switch($type) {
-    			case "POST":
-    				curl_setopt($ch, CURLOPT_POST, true);
-    				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
-    				break;
-    			case "GET":
-    				curl_setopt($ch, CURLOPT_HTTPGET, true);
-    				break;
-    			case "PUT":
-    				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-    				curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-    				break;
-    		}
-    		
-    		$content = curl_exec($ch);
-    		$curl_errno = curl_errno($ch);
-    		$curl_error = curl_error($ch);
-    		curl_close($ch);
-    		
-    		if ($curl_errno) {
-    			$response = array('errors' => array('type' => 'cURL', 'message' => sprintf('%s: %s', $curl_errno, $curl_error)));
-    			return $response;
-    		} else {
-    			return json_decode($content, true);
-    		}
-        } else { // cURL is not installed properly
-            return array('errors' => array('type' => 'cURL', 'message' => __('cURL is not installed', 'event_espresso')));
+        //if (function_exists('curl_version')) {
+        if ($this->_debug_mode) {
+            $gateway = self::LABS_URL;
+            $appkey = $this->_api_key_labs;
+            $login = 'pj-ql-01';
+            $pass = 'pj-ql-01p';
+        } else {
+            $gateway =  self::PRODUCTION_URL;
+            $appkey = $this->_api_key_live;
+            $login = $this->_api_login;
+            $pass = $this->_api_pass;
         }
+        $credentials = base64_encode($login . ':' . $pass);
+		$url = !is_null($txnid) ? $gateway."/".$txnid : $gateway;
+		$options = array(
+		    'httpversion' => '1.1',
+		    'headers' => array('X-PJ-Application-Key' => $appkey, 'Accept' => 'application/json', 'Authorization' =>  'Basic ' . base64_encode($login.':'.$pass)),
+		    'sslverify' => true,
+		    'method' => $type,
+		    'body' => $post
+	    );
+	    $content = wp_remote_request($url, $options);
+	    
+	    if (is_wp_error($content)) {
+	        return array('errors' => array('type' => 'wp_remote_request', 'message' => __($content->get_error_message(), 'event_espresso')));
+	    } else {
+		    return json_decode(wp_remote_retrieve_body($content), true);
+	    }
 	}
 	
 	protected function _filter_fraud_declines($code, $message) {
@@ -130,7 +110,6 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
         	} else { // If we don't have a transaction id, we must have hit at least one error
         		$payment->set_status($this->_pay_model->declined_status());
         		$errors = array();
-                $messages = 'There has been an error: ';
                 foreach ($response['errors'] as $err) {
                     if (isset($err['parameter'])) {
                         $errors[] = sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);
@@ -190,7 +169,6 @@ class EEG_Payjunction_Onsite extends EE_Onsite_Gateway{
 				} else { // If we don't have a transaction id, we must have hit at least one error
 	        		$payment->set_status($this->_pay_model->declined_status());
 	        		$errors = array();
-                    $messages = 'There has been an error: ';
                     foreach ($response['errors'] as $err) {
                         if (isset($err['parameter'])) {
                             $errors[] = sprintf('%s: %s - %s; ',$err['type'], $err['parameter'], $err['message']);

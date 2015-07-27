@@ -3,7 +3,7 @@
   Plugin Name: Event Espresso - PayJunction
   Plugin URI: http://www.payjunction.com
   Description: PayJunction Trinity payment gateway for Event Espresso 4
-  Version: 1.0.3.dev.000
+  Version: 1.0.6.dev.000
   Author: PayJunction
   Author URI: http://www.payjunction.com
   
